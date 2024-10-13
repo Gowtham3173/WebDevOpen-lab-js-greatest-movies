@@ -49,18 +49,83 @@ const dramAverage = dramaMoviesScore(movies);
 console.log(dramAverage);
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
-function orderByYear(moviesArray) {}
+function orderByYear(moviesArray) {
+  return [...moviesArray].sort((a, b) => {
+    if (a.year === b.year) {
+      return a.title.localeCompare(b.title);
+    }
+    return a.year - b.year;
+  });
+}
+const sortedMovies = orderByYear(movies);
+console.log(sortedMovies);
+
 
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically(moviesArray) {}
+function orderAlphabetically(moviesArray) {
+  return moviesArray
+    .map((movie) => movie.title)
+    .sort((a, b) => a.localeCompare(b))
+    .slice(0, 20);
+}
+const first_20_Titles = orderAlphabetically(movies);
+console.log(first_20_Titles);
+
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
-function turnHoursToMinutes(moviesArray) {}
+function turnHoursToMinutes(moviesArray) {
+  return moviesArray.map((moive) => {
+    const durationParts = moive.duration.split(' ');
+    let minutes = 0;
+    durationParts.forEach((part) => {
+      if (part.includes('h')) {
+        minutes += parseInt(part) * 60;
+      } else if (part.includes('min')) {
+        minutes += parseInt(part);
+      }
+    });
+    return {
+      ...moive,
+      duration: minutes
+    };
+  });
+}
+
+const movieInMinutes = turnHoursToMinutes(movies);
+console.log(movieInMinutes);
 
 // BONUS - Iteration 8: Best yearly score average - Best yearly score average
-function bestYearAvg(moviesArray) {}
+function bestYearAvg(moviesArray) {
+  if (moviesArray.length === 0) return null;
+  const scoresByYear = {};
+  moviesArray.forEach((moive) => {
+    if (!scoresByYear[moive.year]) {
+      scoresByYear[moive.year] = [];
+    }
+    scoresByYear[moive.year].push(moive.score);
+  });
+  let bestYear = null;
+  let bestAvgScore = 0;
 
+  for (const year in scoresByYear) {
+    const scores = scoresByYear[year];
+    const avgScore =
+      scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
+    if (avgScore > bestAvgScore) {
+      bestAvgScore = avgScore;
+      bestYear = year;
+    } else if (avgScore === bestAvgScore && year < bestYear) {
+      bestYear = year;
+    }
+  }
+  return `The best year was ${bestYear} with an average score of ${bestAvgScore.toFixed(
+    2
+  )}`;
+}
+
+const bestYear = bestYearAvg(movies);
+console.log(bestYear);
 
 // The following is required to make unit tests work.
 /* Environment setup. Do not modify the below code. */
